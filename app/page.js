@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
+import { QrCodePix } from 'qrcode-pix';
 import { createClient } from '@supabase/supabase-js';
 
 // Configuração do cliente Supabase
@@ -10,7 +10,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Home() {
-  // Estados para os campos do formulário
+  // Estados do formulário (sem alteração)
   const [nomeCompleto, setNomeCompleto] = useState('');
   const [nomeNaCamisa, setNomeNaCamisa] = useState('');
   const [numero, setNumero] = useState('');
@@ -18,28 +18,15 @@ export default function Home() {
   const [tipo, setTipo] = useState('Masculina');
   const [modelo, setModelo] = useState('Com Patrocínio');
 
-  // Estados para controlar a interface
+  // Estados de controle da interface (loading, success, error)
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
-  // --- PONTO CRÍTICO DA CORREÇÃO ---
-
-  // 1. DEFINIÇÃO DO PAYLOAD DE PAGAMENTO
-  // Esta variável contém a string formatada (BR Code) que os bancos entendem.
-  // Ela já inclui a chave PIX, o valor de R$ 40,00 e outras informações.
-  //
-  // IMPORTANTE: Altere "NOME DO TITULAR" e "CIDADE" para os seus dados.
-  // -> "NOME DO TITULAR" deve ter EXATAMENTE 15 caracteres (use espaços no final se precisar, ex: "JOAO SILVA     ").
-  // -> "CIDADE" deve ter EXATAMENTE 6 caracteres (ex: "COTIA ", "RECIFE").
-  const pixPayloadFixo = '00020126330014BR.GOV.BCB.PIX011136417528847520400005303986540540.005802BR5915NOME DO TITULAR6006CIDADE62070503***63041944';
+  // 2. NOVO ESTADO: Vamos guardar a imagem base64 do QR Code gerado aqui.
+  const [qrCodeBase64, setQrCodeBase64] = useState('');
   
-  // Esta variável é APENAS para mostrar o número do CPF na tela de forma amigável.
-  const PIX_KEY_DISPLAY = '36417528847';
-
-  // --- FIM DA ÁREA DE CORREÇÃO ---
-
-
+  // A função de envio agora precisa ser 'async' para usar o 'await' da biblioteca
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -69,6 +56,21 @@ export default function Home() {
       setError(`Erro ao cadastrar: ${insertError.message}`);
       console.error(insertError);
     } else {
+      // 3. GERAÇÃO DINÂMICA DO QR CODE
+      // Se o cadastro no Supabase deu certo, geramos o QR Code aqui.
+      const qrCodePix = QrCodePix({
+        version: '01',
+        // IMPORTANTE: Preencha com seus dados Pix aqui!
+        key: '36417528847', // Sua chave pix (CPF, e-mail, etc.)
+        name: 'Nome do Titular da Chave', // Seu nome completo (ou da empresa)
+        city: 'SAO PAULO', // A cidade do titular da conta
+        value: 40.00, // O valor fixo do pagamento
+      });
+
+      // Geramos a imagem e a salvamos no estado 'qrCodeBase64'
+      const base64 = await qrCodePix.base64();
+      setQrCodeBase64(base64);
+
       setSuccess(true);
       // Limpa o formulário
       setNomeCompleto('');
@@ -88,7 +90,7 @@ export default function Home() {
         
         {!success ? (
           <>
-            {/* ... seu formulário continua igual aqui ... */}
+            {/* O formulário continua exatamente o mesmo */}
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold tracking-tight">Cadastre sua camisa do futunidos</h1>
               <p className="text-gray-400 mt-2">Personalize e registre sua camisa oficial.</p>
@@ -141,20 +143,21 @@ export default function Home() {
           <div className="text-center transition-opacity duration-500 ease-in">
             <h2 className="text-3xl font-bold text-green-400">Camisa Cadastrada com Sucesso!</h2>
             <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento de <strong>R$ 40,00</strong> via PIX utilizando o QR Code abaixo.</p>
+            
+            {/* 4. EXIBIÇÃO DA IMAGEM */}
+            {/* A imagem do QR Code é renderizada aqui usando uma tag <img> */}
+            {/* O `qrCodeBase64` é a string 'data:image/png;base64,iVBORw0...' */}
             <div className="mt-6 flex justify-center bg-white p-4 rounded-lg">
-              
-              {/* 2. USO CORRETO DA VARIÁVEL NO COMPONENTE */}
-              {/* Note que o `value` agora usa a variável `pixPayloadFixo` */}
-              <QRCodeSVG value={pixPayloadFixo} size={256} />
-
+              {qrCodeBase64 && <img src={qrCodeBase64} alt="QR Code PIX para pagamento" width={256} height={256} />}
             </div>
+
             <p className="mt-4 text-sm text-gray-400 break-all">
                 Se não conseguir ler o QR Code, use a chave abaixo no seu app do banco e realize o pagamento de <strong>R$ 40,00</strong>.
             </p>
             <p className="mt-2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md">
-                <strong>Chave PIX (CPF):</strong> {PIX_KEY_DISPLAY}
+                <strong>Chave PIX (CPF):</strong> 36417528847
             </p>
-            <button onClick={() => setSuccess(false)} className="mt-8 w-full py-3 px-4 border border-green-600 rounded-md shadow-sm text-sm font-medium text-green-400 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <button onClick={() => { setSuccess(false); setQrCodeBase64(''); }} className="mt-8 w-full py-3 px-4 border border-green-600 rounded-md shadow-sm text-sm font-medium text-green-400 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
               Cadastrar Nova Camisa
             </button>
           </div>
