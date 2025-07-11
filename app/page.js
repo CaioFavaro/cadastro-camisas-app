@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { QRCodeSVG } from 'qrcode.react'; 
+import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@supabase/supabase-js';
 
 // Configuração do cliente Supabase
@@ -23,7 +23,18 @@ export default function Home() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
-  const PIX_KEY = '36417528847';
+  // --- ALTERAÇÃO INICIADA ---
+
+  // Payload PIX para um valor fixo de R$ 40,00.
+  // IMPORTANTE: Altere "NOME DO TITULAR" (15 caracteres) e "CIDADE" (6 caracteres) para os seus dados.
+  // Se o tamanho for diferente, o payload precisa ser gerado novamente.
+  // Chave PIX (CPF): 36417528847
+  // Valor: R$ 40.00
+  const pixPayloadFixo = '00020126330014BR.GOV.BCB.PIX011136417528847520400005303986540540.005802BR5915NOME DO TITULAR6006CIDADE62070503***63041944';
+  const PIX_KEY_DISPLAY = '36417528847'; // Chave apenas para exibição na tela
+
+  // --- ALTERAÇÃO FINALIZADA ---
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,13 +51,13 @@ export default function Home() {
     const { data, error: insertError } = await supabase
       .from('camisas')
       .insert([
-        { 
-          nome_completo: nomeCompleto, 
-          nome_na_camisa: nomeNaCamisa, 
-          numero: parseInt(numero), 
-          tamanho: tamanho, 
-          tipo: tipo, 
-          modelo: modelo 
+        {
+          nome_completo: nomeCompleto,
+          nome_na_camisa: nomeNaCamisa,
+          numero: parseInt(numero),
+          tamanho: tamanho,
+          tipo: tipo,
+          modelo: modelo
         },
       ]);
 
@@ -135,18 +146,24 @@ export default function Home() {
             </form>
           </>
         ) : (
-          // Tela de Sucesso com QR Code
+          // --- ALTERAÇÃO INICIADA (TELA DE SUCESSO) ---
           <div className="text-center transition-opacity duration-500 ease-in">
             <h2 className="text-3xl font-bold text-green-400">Camisa Cadastrada com Sucesso!</h2>
-            <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento via PIX utilizando o QR Code abaixo.</p>
+            <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento de <strong>R$ 40,00</strong> via PIX utilizando o QR Code abaixo.</p>
             <div className="mt-6 flex justify-center bg-white p-4 rounded-lg">
-              <QRCodeSVG value={PIX_KEY} size={256} />
+              <QRCodeSVG value={pixPayloadFixo} size={256} />
             </div>
-            <p className="mt-4 text-sm text-gray-400 break-all"><strong>Chave PIX (CPF):</strong> {PIX_KEY}</p>
+            <p className="mt-4 text-sm text-gray-400 break-all">
+                Se não conseguir ler o QR Code, use a chave abaixo e realize o pagamento de <strong>R$ 40,00</strong>.
+            </p>
+            <p className="mt-2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md">
+                <strong>Chave PIX (CPF):</strong> {PIX_KEY_DISPLAY}
+            </p>
             <button onClick={() => setSuccess(false)} className="mt-8 w-full py-3 px-4 border border-green-600 rounded-md shadow-sm text-sm font-medium text-green-400 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
               Cadastrar Nova Camisa
             </button>
           </div>
+          // --- ALTERAÇÃO FINALIZADA ---
         )}
 
         {/* Botão para Gerar CSV */}
