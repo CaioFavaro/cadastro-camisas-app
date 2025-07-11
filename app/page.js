@@ -62,7 +62,7 @@ export default function Home() {
         version: '01',
         // IMPORTANTE: Preencha com seus dados Pix aqui!
         key: '36417528847', // Sua chave pix (CPF, e-mail, etc.)
-        name: 'Nome do Titular da Chave', // Seu nome completo (ou da empresa)
+        name: 'Caio Favaro de Oliveira', // Seu nome completo (ou da empresa)
         city: 'SAO PAULO', // A cidade do titular da conta
         value: 40.00, // O valor fixo do pagamento
       });
