@@ -23,17 +23,21 @@ export default function Home() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
-  // --- ALTERAÇÃO INICIADA ---
+  // --- PONTO CRÍTICO DA CORREÇÃO ---
 
-  // Payload PIX para um valor fixo de R$ 40,00.
-  // IMPORTANTE: Altere "NOME DO TITULAR" (15 caracteres) e "CIDADE" (6 caracteres) para os seus dados.
-  // Se o tamanho for diferente, o payload precisa ser gerado novamente.
-  // Chave PIX (CPF): 36417528847
-  // Valor: R$ 40.00
+  // 1. DEFINIÇÃO DO PAYLOAD DE PAGAMENTO
+  // Esta variável contém a string formatada (BR Code) que os bancos entendem.
+  // Ela já inclui a chave PIX, o valor de R$ 40,00 e outras informações.
+  //
+  // IMPORTANTE: Altere "NOME DO TITULAR" e "CIDADE" para os seus dados.
+  // -> "NOME DO TITULAR" deve ter EXATAMENTE 15 caracteres (use espaços no final se precisar, ex: "JOAO SILVA     ").
+  // -> "CIDADE" deve ter EXATAMENTE 6 caracteres (ex: "COTIA ", "RECIFE").
   const pixPayloadFixo = '00020126330014BR.GOV.BCB.PIX011136417528847520400005303986540540.005802BR5915NOME DO TITULAR6006CIDADE62070503***63041944';
-  const PIX_KEY_DISPLAY = '36417528847'; // Chave apenas para exibição na tela
+  
+  // Esta variável é APENAS para mostrar o número do CPF na tela de forma amigável.
+  const PIX_KEY_DISPLAY = '36417528847';
 
-  // --- ALTERAÇÃO FINALIZADA ---
+  // --- FIM DA ÁREA DE CORREÇÃO ---
 
 
   const handleSubmit = async (e) => {
@@ -84,18 +88,17 @@ export default function Home() {
         
         {!success ? (
           <>
+            {/* ... seu formulário continua igual aqui ... */}
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold tracking-tight">Cadastre sua camisa do futunidos</h1>
               <p className="text-gray-400 mt-2">Personalize e registre sua camisa oficial.</p>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Inputs */}
               <div>
                 <label htmlFor="nomeCompleto" className="block text-sm font-medium text-gray-300">Nome Completo</label>
                 <input type="text" id="nomeCompleto" value={nomeCompleto} onChange={(e) => setNomeCompleto(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3"/>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="nomeNaCamisa" className="block text-sm font-medium text-gray-300">Nome na Camisa</label>
@@ -106,37 +109,26 @@ export default function Home() {
                   <input type="number" id="numero" value={numero} onChange={(e) => setNumero(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3"/>
                 </div>
               </div>
-
-              {/* Selects */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label htmlFor="tamanho" className="block text-sm font-medium text-gray-300">Tamanho</label>
                   <select id="tamanho" value={tamanho} onChange={(e) => setTamanho(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3">
-                    <option>PP</option>
-                    <option>P</option>
-                    <option>M</option>
-                    <option>G</option>
-                    <option>GG</option>
-                    <option>GGG</option>
+                    <option>PP</option><option>P</option><option>M</option><option>G</option><option>GG</option><option>GGG</option>
                   </select>
                 </div>
                 <div>
                   <label htmlFor="tipo" className="block text-sm font-medium text-gray-300">Tipo</label>
                   <select id="tipo" value={tipo} onChange={(e) => setTipo(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3">
-                    <option>Masculina</option>
-                    <option>Feminina</option>
+                    <option>Masculina</option><option>Feminina</option>
                   </select>
                 </div>
                 <div>
                   <label htmlFor="modelo" className="block text-sm font-medium text-gray-300">Modelo</label>
                   <select id="modelo" value={modelo} onChange={(e) => setModelo(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3">
-                    <option>Com Patrocínio</option>
-                    <option>Sem Patrocínio</option>
+                    <option>Com Patrocínio</option><option>Sem Patrocínio</option>
                   </select>
                 </div>
               </div>
-              
-              {/* Botão de Cadastro */}
               <div>
                 <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-500 disabled:cursor-not-allowed">
                   {loading ? 'Cadastrando...' : 'Cadastrar Camisa'}
@@ -146,15 +138,18 @@ export default function Home() {
             </form>
           </>
         ) : (
-          // --- ALTERAÇÃO INICIADA (TELA DE SUCESSO) ---
           <div className="text-center transition-opacity duration-500 ease-in">
             <h2 className="text-3xl font-bold text-green-400">Camisa Cadastrada com Sucesso!</h2>
             <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento de <strong>R$ 40,00</strong> via PIX utilizando o QR Code abaixo.</p>
             <div className="mt-6 flex justify-center bg-white p-4 rounded-lg">
+              
+              {/* 2. USO CORRETO DA VARIÁVEL NO COMPONENTE */}
+              {/* Note que o `value` agora usa a variável `pixPayloadFixo` */}
               <QRCodeSVG value={pixPayloadFixo} size={256} />
+
             </div>
             <p className="mt-4 text-sm text-gray-400 break-all">
-                Se não conseguir ler o QR Code, use a chave abaixo e realize o pagamento de <strong>R$ 40,00</strong>.
+                Se não conseguir ler o QR Code, use a chave abaixo no seu app do banco e realize o pagamento de <strong>R$ 40,00</strong>.
             </p>
             <p className="mt-2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md">
                 <strong>Chave PIX (CPF):</strong> {PIX_KEY_DISPLAY}
@@ -163,7 +158,6 @@ export default function Home() {
               Cadastrar Nova Camisa
             </button>
           </div>
-          // --- ALTERAÇÃO FINALIZADA ---
         )}
 
         {/* Botão para Gerar CSV */}
