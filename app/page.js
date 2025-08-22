@@ -64,7 +64,7 @@ export default function Home() {
         key: '36417528847', // Sua chave pix (CPF, e-mail, etc.)
         name: 'Caio Favaro de Oliveira', // Seu nome completo (ou da empresa)
         city: 'SAO PAULO', // A cidade do titular da conta
-        value: 40.00, // O valor fixo do pagamento
+        value: 75.00, // O valor fixo do pagamento
       });
 
       // Geramos a imagem e a salvamos no estado 'qrCodeBase64'
@@ -149,14 +149,14 @@ export default function Home() {
           ) : (
             <div className="text-center transition-opacity duration-500 ease-in">
               <h2 className="text-3xl font-bold text-green-400">Camisa Cadastrada com Sucesso!</h2>
-              <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento de <strong>R$ 40,00</strong> via PIX utilizando o QR Code abaixo.</p>
+              <p className="mt-4 text-gray-300">Para confirmar seu pedido, realize o pagamento de <strong>R$ 75,00</strong> via PIX utilizando o QR Code abaixo.</p>
               
               <div className="mt-6 flex justify-center bg-white p-4 rounded-lg">
                 {qrCodeBase64 && <img src={qrCodeBase64} alt="QR Code PIX para pagamento" width={256} height={256} />}
               </div>
 
               <p className="mt-4 text-sm text-gray-400 break-all">
-                  Se não conseguir ler o QR Code, use a chave abaixo no seu app do banco e realize o pagamento de <strong>R$ 40,00</strong>.
+                  Se não conseguir ler o QR Code, use a chave abaixo no seu app do banco e realize o pagamento de <strong>R$ 75,00</strong>.
               </p>
               <p className="mt-2 text-sm text-gray-300 bg-gray-800 p-2 rounded-md">
                   <strong>Chave PIX (CPF):</strong> 36417528847
