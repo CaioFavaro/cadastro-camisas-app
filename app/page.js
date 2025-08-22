@@ -183,6 +183,11 @@ export default function Home() {
             alt="Tabela com as medidas das camisas" 
             className="rounded-lg w-full h-auto object-contain"
           />
+          <img 
+            src="/tamanho2.jpeg" 
+            alt="Tabela com as medidas das camisas" 
+            className="rounded-lg w-full h-auto object-contain"
+          />    
         </div>
         
       </div>
