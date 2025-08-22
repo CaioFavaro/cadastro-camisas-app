@@ -179,7 +179,7 @@ export default function Home() {
         <div className="bg-black bg-opacity-70 p-10 rounded-2xl shadow-2xl w-full max-w-lg backdrop-blur-sm border border-gray-700 flex flex-col items-center">
           <h2 className="text-3xl font-bold tracking-tight text-center mb-6">Tabela de Medidas</h2>
           <img 
-            src="/tamanho.jpeg" 
+            src="/tamanho3.jpeg" 
             alt="Tabela com as medidas das camisas" 
             className="rounded-lg w-full h-auto object-contain"
           />
