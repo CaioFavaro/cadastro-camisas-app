@@ -16,7 +16,7 @@ export default function Home() {
   const [numero, setNumero] = useState('');
   const [tamanho, setTamanho] = useState('M');
   const [tipo, setTipo] = useState('Masculina');
-  const [modelo, setModelo] = useState('Com Patrocínio');
+  const [modelo, setModelo] = useState('Sem Patrocínio');
 
   // Estados de controle da interface (loading, success, error)
   const [loading, setLoading] = useState(false);
@@ -78,7 +78,7 @@ export default function Home() {
       setNumero('');
       setTamanho('M');
       setTipo('Masculina');
-      setModelo('Com Patrocínio');
+      setModelo('Sem Patrocínio');
     }
 
     setLoading(false);
@@ -134,7 +134,7 @@ export default function Home() {
                   <div>
                     <label htmlFor="modelo" className="block text-sm font-medium text-gray-300">Modelo</label>
                     <select id="modelo" value={modelo} onChange={(e) => setModelo(e.target.value)} className="mt-1 block w-full bg-gray-800 border-gray-600 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 text-white p-3">
-                      <option>Com Patrocínio</option><option>Sem Patrocínio</option>
+                      <option>Mateus Viadão</option><option>Sem Patrocínio</option>
                     </select>
                   </div>
                 </div>
