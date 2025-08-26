@@ -27,13 +27,10 @@ export async function GET() {
         quotes: true,
         // Mapeia os nomes das colunas para um cabeçalho mais amigável
         columns: [
-            "created_at",
-            "nome_completo",
             "nome_na_camisa",
             "numero",
             "tamanho",
-            "tipo",
-            "modelo"
+            "tipo"
         ]
     });
 
